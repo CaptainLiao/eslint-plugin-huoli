@@ -1,8 +1,22 @@
 ## eslint-plugin-huoli
-活力项目使用的 eslint 规则。
 
-### 规则1
-禁止在业务中使用`location`跳转到外部链接。
+### useage
+
+Add `plugin:huoli/recommended` in your eslint config file eg(.eslintrc.js):
+
+````
+module.exports = {
+  ...
+  "extends": [
+    ...
+    "plugin:huoli/recommended"
+  ],
+};
+
+````
+
+### rule one
+refuse use location jump.
 ````
 'no-location-jump': 'error'
 ````
