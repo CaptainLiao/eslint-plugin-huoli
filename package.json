@@ -4,6 +4,7 @@
   "description": "huoli eslint rules",
   "main": "src/index.js",
   "scripts": {
+    "debug": "node node_modules/jest/bin/jest",
     "test": "jest --verbose",
     "testc": "jest --verbose --coverage"
   },
