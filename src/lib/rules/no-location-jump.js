@@ -21,20 +21,19 @@ module.exports = {
           navigateTo: false,
           redirectTo: false,
         }
+        this.importSpecifier = {
+          navigateTo: false,
+          redirectTo: false,
+        }
       },
       'Program:exit': function(path) {
         const {navigateTo, redirectTo} = this.replaceInfo
         if (!navigateTo && !redirectTo) return
 
-        let importNav = ''
-        if (navigateTo && redirectTo) {
-          importNav = "import { navigateTo, redirectTo } from '@/lib/navigate'"
-        } else if (redirectTo) {
-          importNav = "import { redirectTo } from '@/lib/navigate'"
-        } else {
-          importNav = "import { navigateTo } from '@/lib/navigate'"
-        }
-
+        const importNav = getImportNavigateStr({
+          navigateTo: navigateTo || this.importSpecifier.navigateTo,
+          redirectTo: redirectTo || this.importSpecifier.redirectTo,
+        })
         const nodeBody = path.body
         const index = nodeBody.findIndex(i => i.type === 'ImportDeclaration' && i.source.value === '@/lib/navigate')
         if (index === -1) {
@@ -48,12 +47,18 @@ module.exports = {
         } else {
           return context.report({
             node: path,
-            message: 'not import @/lib/navigate',
+            message: 'reimport @/lib/navigate',
             fix: fixer =>  {
               return fixer.replaceText(nodeBody[index], importNav)
             }
           })
         }
+      },
+
+      ImportSpecifier(node) {
+        const idName = node.local.name
+        if (idName === 'navigateTo') this.importSpecifier.navigateTo = true
+        if (idName === 'redirectTo') this.importSpecifier.redirectTo = true
       },
 
       AssignmentExpression(path) {
@@ -106,4 +111,19 @@ module.exports = {
       }
     }
   }
+}
+
+function getImportNavigateStr(obj) {
+  const {navigateTo, redirectTo} = obj
+
+  let importNav = ''
+  if (navigateTo && redirectTo) {
+    importNav = "import { navigateTo, redirectTo } from '@/lib/navigate'"
+  } else if (redirectTo) {
+    importNav = "import { redirectTo } from '@/lib/navigate'"
+  } else if (navigateTo) {
+    importNav = "import { navigateTo } from '@/lib/navigate'"
+  }
+
+  return importNav
 }
