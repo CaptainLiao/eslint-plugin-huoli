@@ -16,8 +16,8 @@ ruleTester.run('huoli/no-location-jump', rule, {
       errors: 2
     },
     {
-      code: 'location.replace(123);',
-      output: `import { redirectTo } from '@/lib/navigate'\r\nnavigateTo(123);`,
+      code: 'location.assign(123);',
+      output: `import { navigateTo } from '@/lib/navigate'\r\nnavigateTo(123);`,
       errors: 2
     },
   ]
