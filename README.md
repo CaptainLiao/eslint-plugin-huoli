@@ -18,7 +18,11 @@ module.exports = {
 ### rule one
 refuse use location jump.
 ````
-'no-location-jump': 'error'
+'huoli/no-location-jump': 'error'
+````
+**disable rule**
+````
+/* eslint-disable huoli/no-location-jump */
 ````
 
 
